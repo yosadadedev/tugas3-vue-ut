@@ -27,6 +27,8 @@ Tampilan memakai **design system yang sama dengan Tugas Praktik 1** (gaya Ant De
 
 Data berasal dari *dummy data* `dataBahanAjar.js` dan tidak memakai database.
 
+🌐 **Live demo:** [sitta-tugas3-yosada.netlify.app](https://sitta-tugas3-yosada.netlify.app/)
+
 ---
 
 ## Tampilan Aplikasi
@@ -46,6 +48,10 @@ Data berasal dari *dummy data* `dataBahanAjar.js` dan tidak memakai database.
 ---
 
 ## Cara Menjalankan
+
+**Online (tanpa unduh):** buka https://sitta-tugas3-yosada.netlify.app/ (di-deploy ke Netlify).
+
+**Lokal:**
 
 1. Pastikan komputer terhubung ke internet karena Vue.js dan Bootstrap Icons dimuat dari CDN.
 2. Buka `index.html` langsung di browser (Chrome, Edge, Firefox, atau Safari).
