@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SITTA Universitas Terbuka</title>
+  <meta name="description" content="SITTA - Aplikasi pemesanan dan distribusi bahan ajar Universitas Terbuka (Vue.js Component)">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!--
+    Root template aplikasi. Setiap tag kebab-case di bawah ini adalah
+    CUSTOM ELEMENT yang didefinisikan sebagai Vue Component di folder js/components/.
+    Data dikirim ke komponen lewat props (:nama-prop), perubahan diterima lewat event (@nama-event).
+  -->
+  <div id="app" class="layout" :class="{ 'is-sider-open': siderTerbuka }" v-cloak>
+    <app-sider :menu="menu" :aktif="halaman" :lencana="lencanaMenu" @pindah="pindahHalaman"></app-sider>
+    <div class="sider-mask" @click="siderTerbuka = false"></div>
+
+    <div class="layout-main">
+      <app-header @buka-menu="siderTerbuka = true"
+                  @pintasan="tampilPintasan = true"
+                  @pulihkan="pulihkanData"></app-header>
+
+      <main class="layout-content" id="main">
+        <div class="page-header" style="margin-bottom:16px">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <ol style="margin-bottom:0">
+              <li v-if="halaman === 'beranda'"><span aria-current="page"><i class="bi bi-house" aria-hidden="true"></i> Beranda</span></li>
+              <template v-else>
+                <li><a href="#beranda" @click.prevent="pindahHalaman('beranda')"><i class="bi bi-house" aria-hidden="true"></i> Beranda</a></li>
+                <li><span aria-current="page">{{ judulHalaman }}</span></li>
+              </template>
+            </ol>
+          </nav>
+        </div>
+
+        <transition name="page" mode="out-in">
+          <halaman-beranda v-if="halaman === 'beranda'" :key="'beranda-' + kunciHalaman"
+                           :stok="stok"
+                           :tracking="tracking"
+                           :upbjj-list="upbjjList"
+                           @navigasi="pindahHalaman"></halaman-beranda>
+
+          <halaman-stok v-else-if="halaman === 'stok'" :key="'stok-' + kunciHalaman"
+                        :stok="stok"
+                        :upbjj-list="upbjjList"
+                        :kategori-list="kategoriList"
+                        :filter-awal="opsiHalaman"
+                        @tambah-stok="tambahStok"
+                        @ubah-stok="ubahStok"
+                        @hapus-stok="hapusStok"></halaman-stok>
+
+          <halaman-pemesanan v-else-if="halaman === 'pemesanan'" :key="'pemesanan-' + kunciHalaman"
+                             :paket="paket"
+                             :stok="stok"
+                             :pengiriman-list="pengirimanList"
+                             :upbjj-list="upbjjList"
+                             :tracking="tracking"
+                             @buat-do="buatDO"></halaman-pemesanan>
+
+          <halaman-tracking v-else :key="'tracking-' + kunciHalaman"
+                            :tracking="tracking"
+                            :paket="paket"
+                            :status-list="statusList"
+                            :nomor-awal="opsiHalaman.nomor || ''"
+                            @perbarui-do="perbaruiDO"></halaman-tracking>
+        </transition>
+      </main>
+
+      <app-footer keterangan="SITTA — Sistem Informasi Tiras &amp; Transaksi Bahan Ajar · Universitas Terbuka"></app-footer>
+    </div>
+
+    <modal-dialog v-if="tampilPintasan" judul="Pintasan Keyboard"
+                  subjudul="Gunakan keyboard agar pekerjaan lebih cepat."
+                  @tutup="tampilPintasan = false">
+      <daftar-pintasan></daftar-pintasan>
+    </modal-dialog>
+
+    <notifikasi-toast :pesan="notifikasi.pesan" :jenis="notifikasi.jenis"
+                      @tutup="notifikasi.pesan = ''"></notifikasi-toast>
+  </div>
+
+  <!-- Library Vue.js 2 (mendukung fitur filter) -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+
+  <!-- Data & fungsi bantu -->
+  <script src="js/data/dataBahanAjar.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/filters.js"></script>
+
+  <!-- Komponen layout & komponen kecil yang dipakai ulang -->
+  <script src="js/components/app-sider.js"></script>
+  <script src="js/components/app-header.js"></script>
+  <script src="js/components/app-footer.js"></script>
+  <script src="js/components/badge-status.js"></script>
+  <script src="js/components/kartu-statistik.js"></script>
+  <script src="js/components/modal-dialog.js"></script>
+  <script src="js/components/notifikasi-toast.js"></script>
+  <script src="js/components/timeline-perjalanan.js"></script>
+  <script src="js/components/daftar-pintasan.js"></script>
+  <script src="js/components/form-bahan-ajar.js"></script>
+
+  <!-- Komponen halaman -->
+  <script src="js/components/halaman-beranda.js"></script>
+  <script src="js/components/halaman-stok.js"></script>
+  <script src="js/components/halaman-pemesanan.js"></script>
+  <script src="js/components/halaman-tracking.js"></script>
+
+  <!-- Root instance: harus dimuat paling akhir -->
+  <script src="js/app.js"></script>
+</body>
+</html>
